@@ -103,23 +103,30 @@
 
     It is possible to construct new hypergraphs by the replacement of a hyperedge by a new hypergraph to yield a new hypergraph. A hyperedge $e$ in a hypergraph $H$ may be replaced with another hypergraph $R$. An sequence of external nodes $ext$ in $R$ is needed where each node in $ext$ corresponds to an attachment node of $e$.
 
+    A \emph{hypergraph with external nodes} is defined as a pair $\langle H, ext \rangle$ where $H$ is a hypergraph and $ext \in V_H*$ is a \emph{sequence} of external nodes. The set of external nodes is denoted by $EXT$.
+
     A replacement happens by first removing the hyperedge $e$, then adding the hypergraph $R$ excluding external nodes. Then for each hyperedge in $R$ that points to an external node, the tentacle must now point to the corresponding attachment nodes of $e$.
 
-    The replacement of hyperedge $e$ in a hypergraph $H$ with the a hypergraph $R$ is denoted by $H[e/R]$. 
-
     The definition of hyperedge replacement is as follows:
+
+    Let $\langle H, ext_H \rangle$, $\langle R, ext_R \rangle$ be disjoint hypergraphs with external nodes. $e$ is a hyperedge in $H$ where $type(e) = |ext_R|$. The replacement of hyperedge $e$ in a hypergraph with external nodes $H$ with the a hypergraph with external nodes $R$ is denoted by $\langle H, ext_H \rangle[e/\langle R, ext_R\rangle] = \langle X, ext_X \rangle$, also written $H[e/R] = X$ where the sequence of external nodes are implied. 
+
+    \todo{Context-free Hypergraph Grammars: Node and Hyperedge Rewriting}
+
     \begin{align*}
-    V_X &= V_H + (V_R - ext) \\
-    E_X &= (E_H - e) + E_R \\
-    lbl_X &= lbl_H \cup lbl_R \\
-    att_X(e) &= \{handover_e(x_1),...,handover_e(x_n)\} & \text{for all $e \in E_X$ and where $att_H(e) = x_1...x_n$}
-    \end{align*}
-    Where $handover_e : V_X \to V_X$ is defined by
-    \begin{align*}
-    handover_e(x_i) &= \begin{dcases*}
-    a_i & if $x_i \in ext$ and where $att_H(e) = a_1...a_n$ \\
-    x_i & otherwise
-    \end{dcases*}
+    V_X &= V_H \cup (V_R \setminus EXT_R) \\[2mm]
+    E_X &= (E_H \setminus \{e\}) \cup E_R \\[2mm]
+    lbl_X(e') &= \begin{dcases*}
+      lbl_H(e') \textrm{ if } e' \in E_H \setminus {e} \\
+      lbl_R(e') \textrm{ if } e' \in E_R
+    \end{dcases*} \\[2mm]
+    att_X(e', i) &= \begin{dcases*}
+      att_H(e', i) \textrm{ if } e' \in E_H \setminus {e} \\
+      att_H(e, j) \textrm{ if } e' \in E_R \textrm{ and } att_R(e', i) = ext_R(j) \\
+      att_R(e', i) \textrm{ if } e' \in E_R \textrm{ and } att_R(e', i) \in (V_R \setminus EXT_R)
+    \end{dcases*} \\
+    &\ \textrm{for } i \in 1..type(e') \\[2mm]
+    ext_X &= ext_H
     \end{align*}
 
     We can see an example of hyperedge replacement here.
