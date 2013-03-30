@@ -91,13 +91,21 @@ And now the program can generate as many graphs as needed, here we have generate
 
 \subsection{Ambiguous Grammars}
 
-In general an ambiguous grammar is a grammar where there is a string that can have more than one \todo{Define leftmost derivation} leftmost derivation. This also applies to hypergraph grammars.
+In general an ambiguous grammar is a grammar where there is a string that can be derived in more than one way. This applies to hypergraph grammars in the same way.
 
 The Hickey-Cohen generation algorithm requires the input grammar to be unambiguous in order to \emph{uniformly} generate terminal graphs. However, if the input grammar is ambiguous then the algorithm will generate graphs where each \emph{lefthand derivation} is uniformly distributed. Therefore if a terminal graph in the grammar has two lefthand derivations then this terminal graph has double the probability of being generated and therefore the generation is no longer uniform.
 
-\todo{Example}
+\input{figures/theory-ambiguous}
 
-Unfortunately it is undecidable to know whether a grammar is ambiguous and impossible to convert an ambiguous grammar to an unambigous grammar. However as long as the user is aware that using an ambiguous grammar will not produce uniform results then there should be no problem.
+Figure \ref{fig:ambiguousGrammar} shows an ambiguous grammar. The ambiguity comes from the production $\pi_{12}$ where the two hyperedges labelled $A$ may be replaced differently. If $(a,b)$ is the replacement of the left hyperedge with $a$ and the right hyperedge of $b$, then the resulting hypergraph is isomporphic the replacement $(b, a)$
+
+The Hickey-Cohen approach using $n=7$ will count 4 distinct graphs and select at random from the following.
+
+\input{figures/theory-ambiguous-all}
+
+As you can see, the first two graphs are isomorphic even though the algorithm treats them difference because of the different derivation paths.
+
+Unfortunately it is undecidable to know whether a grammar is ambiguous and impossible to convert an ambiguous grammar to an unambiguous grammar. So it should be up to the user to be aware of the problems with ambiguous grammars and to deal with the output himself.
 
 \subsection{Cyclic Grammars}
 
