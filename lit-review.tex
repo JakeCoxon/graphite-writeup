@@ -144,7 +144,7 @@
 
   \subsubsection{Hyperedge Replacement Grammars}
 
-    Hypergraphs can be generated using productions based on hyperedge replacement. A production is $p = \langle x \to R, ext \rangle$ where $x$ is a non-terminal so let $H$, $H'$ be hypergraphs and let $e \in E_H$ such that $l_{H}(e) = x$. Then $H$ directly derives $H'$ by $p$ applied to $e$ if $H'$ is equivilent to $H[e / R]$. This can be written $H \underset{p}{\Rightarrow} H'$.
+    Hypergraphs can be generated using productions based on hyperedge replacement. A production is $p = x \to \langle R, ext \rangle$ where $x$ is a non-terminal so let $H$, $H'$ be hypergraphs and let $e \in E_H$ such that $l_{H}(e) = x$. Then $H$ directly derives $H'$ by $p$ applied to $e$ if $H'$ is equivilent to $H[e / R]$. This can be written $H \underset{p}{\Rightarrow} H'$.
 
     If we are given a production:
     \input{figures/hyperedge-production}
@@ -154,7 +154,7 @@
 
     A hyperedge replacement grammar (HR grammar) is a system for generating a hypergraph language through a set of derivations. It is similar to other language generation concepts in computer science.
 
-    A HR grammar can be defined as $G = \langle N, T, P, S \rangle$ where $N$ is a set of non-terminals, $T$ is a set of terminals disjoint with $N$, $S$ is the start graph. $P$ is a set of productions which are in the form of $\langle x \to R, ext \rangle$ where $x \in N$, $R$ is a hypergraph and $ext$ is the sequence of external nodes in $R$.
+    A HR grammar can be defined as $G = \langle N, T, P, S \rangle$ where $N$ is a set of non-terminals, $T$ is a set of terminals disjoint with $N$, $S$ is the start graph. $P$ is a set of productions which are in the form of $x \to \langle R, ext \rangle$ where $x \in N$, $R$ is a hypergraph and $ext$ is the sequence of external nodes in $R$.
 
     The language of a control flow graph can be generated with the following
     \input{figures/grammar-flowchart}

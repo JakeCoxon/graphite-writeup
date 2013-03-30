@@ -88,3 +88,74 @@ $g_A(11)$ & 0 \\
 And now the program can generate as many graphs as needed, here we have generated six.
 
 \input{figures/theory-generation}
+
+\subsection{Ambiguous Grammars}
+
+In general an ambiguous grammar is a grammar where there is a string that can have more than one \todo{Define leftmost derivation} leftmost derivation. This also applies to hypergraph grammars.
+
+The Hickey-Cohen generation algorithm requires the input grammar to be unambiguous in order to \emph{uniformly} generate terminal graphs. However, if the input grammar is ambiguous then the algorithm will generate graphs where each \emph{lefthand derivation} is uniformly distributed. Therefore if a terminal graph in the grammar has two lefthand derivations then this terminal graph has double the probability of being generated and therefore the generation is no longer uniform.
+
+\todo{Example}
+
+Unfortunately it is undecidable to know whether a grammar is ambiguous and impossible to convert an ambiguous grammar to an unambigous grammar. However as long as the user is aware that using an ambiguous grammar will not produce uniform results then there should be no problem.
+
+\subsection{Cyclic Grammars}
+
+A cyclic grammar is a grammar where a non-terminal can derive exactly itself. This can be directly ($A \Rightarrow A$) or indirectly ($A \Rightarrow B \Rightarrow A$). If a grammar contains epsilon productions, it may be cycling also in the case where $A \to AB$ and $B \to \epsilon$
+
+The Hickey-Cohen approach is invalid on a cyclic grammar because the number of deriving strings from a cyclic non-terminal is infinite. We can observe this by expanding the generating function for a a simple grammar $A \to B | a$ and $B \to A$. The generating function becomes $g_A(t) = g_B(t) + \delta_0(t-1) = g_A(t) + \delta_0(t-1)$ which is recursive and cannot be computed.
+
+In order to test if a grammar is cyclic, firstly the grammar must be transformed to an $\epsilon$-free grammar. This means there is no derivations to $\epsilon$ or there is exactly one $\epsilon$-production $S \to \epsilon$ and $S$ does not appear on the rightside of any production. In string grammars $\epsilon$ means the empty string, in hypergraph grammars $\epsilon$ means a graph containing just external nodes.
+
+I will modify the algorithm to work with hypergraph grammars.
+
+\begin{itemize}
+\item Given a hypergraph grammar $G = \langle N, T, P, S \rangle$
+\item Construct $N_\epsilon = \left\{A | A \in N \textrm{ and } A \Rightarrow^{+} \epsilon \right\}$. This is the set of non-terminals which possibly derive to $\epsilon$.
+
+Define a predicate `$a$ produces $\epsilon$' which yields true if a non-terminal $a$ produces $\epsilon$. It is defined by the following: $A \to \langle R, ext \rangle$ is in $P$ where $R = \langle V, E, att, lbl\rangle$, $V = ext$ and $E = \{\}$. This means the production replaces a hyperedge with the empty graph.
+\begin{enumerate}
+\item Let $V_0 = \{A| \textrm{if $A \in N$ produces $\epsilon$}\}$ and set $i = 1$
+\item Let $V_i = \left\{A| \textrm{if } A \to X_1X_2\dots X_n \textrm{ where } X_k \in V_{i-1}\right\} \cup V_{i-1}$
+\item If $V_i \neq V_{i-1}$ set $i=i+1$ and repeat step 2. Otherwise let $N_\epsilon = V_i$
+\end{enumerate}
+Since $V_i \subseteq N$ then this procedure will terminate after a finite number of steps.
+\item Let $P'$ be the set of productions constructed by the following
+\begin{enumerate}
+\item If $A \to \langle R, ext \rangle$ is in $P$, $k \geq 0$ and each $B_i$ is in $N_\epsilon$ but no symbols in any $a_j$ are in $N_\epsilon$, then add to $P'$ all productions in the form of
+\[
+A \to a_0 X_1 a_1 X_2 a_2 \dots X_k a_k
+\]
+Where $X_i$ is either $B_i$ or $\epsilon$, without adding $A \to \epsilon$.
+\item If $S$ is in $N_\epsilon$, add to $P'$ the productions
+\[S' \to \epsilon|S\]
+Where $S'$ is a new symbol, and let $N' = N \cup \{S'\}$. Otherwise let $N' = N$ and $S' = S$
+\end{enumerate}
+\item Let $G' = \langle N', \Sigma, P', S' \rangle$
+\end{itemize}
+
+\paragraph{}
+
+For example, given the grammar with the following productions in $P$:
+\begin{align*}
+A &\to AaBbCc | \epsilon \\
+B &\to AB | \epsilon \\
+C &\to c | d
+\end{align*}
+Then $V_\epsilon = \{A, B\}$ and the productions added to $P'$ would be:
+\begin{align*}
+A &\to AaBbCc | aBbCc | AabCc | abCc \\
+B &\to AB | A | B \\
+C &\to c | d \\
+\end{align*}
+This is an equivalent grammar without any $\epsilon$ productions.
+
+\todo{Algorithm 2.10 The Theory of Parsin, Translation and Compiling Volume 1}
+
+% The Hickey-Cohen approach also has a problem with the grammar $A \Rightarrow AB$, the counting function is: 
+% \begin{align}
+% g_A(t) &= (g_A * g_B)(t)
+% &= \sum_{k=0}^{t} g_A(k) * g_B(t-k)
+% \end{align}
+
+% As we can see, this is a recursive function when $k=t$. This will cause an infinite loop when implemented in code so it would be good to remove this case. If it is known that $g_N(0)=0$ then we can update the function 
