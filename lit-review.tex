@@ -16,9 +16,11 @@
 
   A generalised version of graphs are hypergraphs. Within a hypergraph, a hyperedge is similar to an edge except it is connected to any number of vertices. The connections between a hyperedge and a vertex is known as `tentacles' and the number of the tentacles a hyperedge has is known as its type. A graph is a specialised version of a hypergraph where all hyperedges has type of $2$.
 
-  An alphabet $C$ is a fixed set containing labels. A hypergraph over $C$ is a system $F = \langle V_F, E_F, att_F, lbl_F \rangle$ where $V_F$ and $E_F$ are finite sets of vertices and edges the same as graphs. $att_F : E_F \to V_F*$ is a mapping assigning a sequence of `attachment nodes' to each edge $e \in E_F$ and $lbl_F$ is a mapping that labels hyperedges. 
+  An alphabet $C$ is a fixed set containing labels. A hypergraph over $C$ is a system $F = \langle V_F, E_F, att_F, lbl_F \rangle$ where $V_F$ and $E_F$ are finite sets of vertices and edges the same as graphs. $att_F : E_F \to V_F*$ is a mapping assigning a sequence of `attachment nodes' to each edge $e \in E_F$, $att_F(e, i)$ can be written to denote the $i$th attachment node of $e$. $lbl_F$ is a mapping that labels hyperedges. 
 
   The $type(E)$ of an edge is the number of vertices that a hyperedge attaches to. A tentacle is an object used to describe the attachment of a hyperedge to a vertex.
+
+  Hyperedge can be drawn as a regular edge if its type is 2 and it has no label.
 
   %\todo{C???}
 
@@ -213,10 +215,12 @@
     \begin{itemize}
     \item Let $G$ be the start graph. Let $d$ be a sequence of all the non-terminal hyperedges in $G$
     \item Begin loop
+    \begin{itemize}
     \item Pick a random integer $1 \leq l \leq \#d$.
-    \item Get the set of all valid rules on this edge. $r = \{\textrm{All rules $\langle x \to R \rangle$ where $x = lbl_F(d_l)$\}}$
+    \item Get the set of all valid rules on this edge. $r = \{\textrm{All rules $x \to \langle R, ext \rangle$ where $x = lbl_F(d_l)$\}}$
     \item Pick another random integer $1 \leq m \leq \#r$ and apply the rule $r_m$ to the graph $G$.
     \item Remove the non-terminal $d_l$ from $d$ and add all the non-terminals in the replaced graph $R$.
+    \end{itemize}
     \item Repeat loop
     \end{itemize}
 
