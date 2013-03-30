@@ -3,5 +3,7 @@
 *.out
 *.aux
 *.toc
+*.blg
+*.bbl
 .DS_Store
 .cache
