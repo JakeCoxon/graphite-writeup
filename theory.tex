@@ -107,7 +107,7 @@ The Hickey-Cohen approach is invalid on a cyclic grammar because the number of d
 
 In order to test if a grammar is cyclic, firstly the grammar must be transformed to an $\epsilon$-free grammar. This means there is no derivations to $\epsilon$ or there is exactly one $\epsilon$-production $S \to \epsilon$ and $S$ does not appear on the rightside of any production. In string grammars $\epsilon$ means the empty string, in hypergraph grammars $\epsilon$ means a graph containing just external nodes.
 
-I will modify the algorithm to work with hypergraph grammars.
+Below I have modified Algorithm 2.10 from \citet{Aho} to work with hypergraph grammars.
 
 \begin{itemize}
 \item Given a hypergraph grammar $G = \langle N, T, P, S \rangle$
@@ -149,8 +149,6 @@ B &\to AB | A | B \\
 C &\to c | d \\
 \end{align*}
 This is an equivalent grammar without any $\epsilon$ productions.
-
-\todo{Algorithm 2.10 The Theory of Parsin, Translation and Compiling Volume 1}
 
 % The Hickey-Cohen approach also has a problem with the grammar $A \Rightarrow AB$, the counting function is: 
 % \begin{align}
