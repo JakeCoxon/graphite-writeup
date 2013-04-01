@@ -113,29 +113,36 @@ A cyclic grammar is a grammar where a non-terminal can derive exactly itself. Th
 
 The Hickey-Cohen approach is invalid on a cyclic grammar because the number of deriving strings from a cyclic non-terminal is infinite. We can observe this by expanding the generating function for a a simple grammar $A \to B | a$ and $B \to A$. The generating function becomes $g_A(t) = g_B(t) + \delta_0(t-1) = g_A(t) + \delta_0(t-1)$ which is recursive and cannot be computed.
 
-In order to test if a grammar is cyclic, firstly the grammar must be transformed to an $\epsilon$-free grammar. This means there is no derivations to $\epsilon$ or there is exactly one $\epsilon$-production $S \to \epsilon$ and $S$ does not appear on the rightside of any production. In string grammars $\epsilon$ means the empty string, in hypergraph grammars $\epsilon$ means a graph containing just external nodes.
+In order to test if an $\epsilon$-free grammar is cyclic...
 
-Below I have modified Algorithm 2.10 from \citet{Aho} to work with hypergraph grammars.
+\subsection{$\epsilon$-Free Grammar}
+
+An $\epsilon$-free grammar is a grammar which has no derivations to $\epsilon$ or there is exactly one $\epsilon$-production $S \to \epsilon$ and $S$ does not appear on the rightside of any production. An $\epsilon$-production has different meaning depending on the type of grammar. In string grammars an $\epsilon$ is the empty string, in hypergraph grammars $\epsilon$ is a graph containing just external nodes.
+
+It is useful to be able to transform an $\epsilon$ grammar into a $\epsilon$-free grammar. Below I have modified Algorithm 2.10 from \citet{Aho} to work with hypergraph grammars.
 
 \begin{itemize}
 \item Given a hypergraph grammar $G = \langle N, T, P, S \rangle$
 \item Construct $N_\epsilon = \left\{A | A \in N \textrm{ and } A \Rightarrow^{+} \epsilon \right\}$. This is the set of non-terminals which possibly derive to $\epsilon$.
 
-Define a predicate `$a$ produces $\epsilon$' which yields true if a non-terminal $a$ produces $\epsilon$. It is defined by the following: $A \to \langle R, ext \rangle$ is in $P$ where $R = \langle V, E, att, lbl\rangle$, $V = ext$ and $E = \{\}$. This means the production replaces a hyperedge with the empty graph.
 \begin{enumerate}
-\item Let $V_0 = \{A| \textrm{if $A \in N$ produces $\epsilon$}\}$ and set $i = 1$
-\item Let $V_i = \left\{A| \textrm{if } A \to X_1X_2\dots X_n \textrm{ where } X_k \in V_{i-1}\right\} \cup V_{i-1}$
+\item Let $V_0 = \emptyset$ and set $i = 1$
+\item Let $V_i = \left\{a| a \in N \textrm{ and } produces_P(a, V_{i-1})\right\} \cup V_{i-1}$
+
+Where `$produces_P(A, Y)$' is a predicate which yields true if there is a a non-terminal $A$ in $P$ which directly derives only non-terminals in the set $Y$. It is defined as the following: $produces_P(A, Y) = true \iff A \to \langle R, ext \rangle$ is in $P$ where $R = \langle V, E, att, lbl\rangle$, $V = ext$ and $E \subseteq Y$ 
 \item If $V_i \neq V_{i-1}$ set $i=i+1$ and repeat step 2. Otherwise let $N_\epsilon = V_i$
 \end{enumerate}
 Since $V_i \subseteq N$ then this procedure will terminate after a finite number of steps.
 \item Let $P'$ be the set of productions constructed by the following
 \begin{enumerate}
-\item If $A \to \langle R, ext \rangle$ is in $P$, $k \geq 0$ and each $B_i$ is in $N_\epsilon$ but no symbols in any $a_j$ are in $N_\epsilon$, then add to $P'$ all productions in the form of
-\[
-A \to a_0 X_1 a_1 X_2 a_2 \dots X_k a_k
-\]
-Where $X_i$ is either $B_i$ or $\epsilon$, without adding $A \to \epsilon$.
-\item If $S$ is in $N_\epsilon$, add to $P'$ the productions
+\item If $A \to \langle H, ext \rangle$ is in $P$, where $H$ is the hypergraph $\langle V, E, att, lbl\rangle$ and the set of edges is the following:
+\[E = \left\{ a, B_1, B_2, \dots, B_k\right\}, k \geq 0\]
+Where each $B_i$ is in $N_\epsilon$ but no symbols in $a$ are in $N_\epsilon$, then add to $P'$ all productions $A \to \langle H', ext \rangle$, where $H' =  \langle V, E', att, lbl\rangle$ and the new set of edges is in the form of the following:
+\begin{align*}
+E' &= \left\{ a, X_1, X_2, \dots, X_k \right\}
+\end{align*}
+Where $X_i$ is either $B_i$ or $\emptyset$, and either $E' \neq \{\}$ or $V \neq ext$ (We do not want to add another $\epsilon$-production). This effectively constructs a new production removing every combination of the edge $B_i$ from the hypergraph $H$.
+\item If $S \to x$ is in $P$ where $produces(S, N_\epsilon)$ is in $N_\epsilon$, add to $P'$ the productions
 \[S' \to \epsilon|S\]
 Where $S'$ is a new symbol, and let $N' = N \cup \{S'\}$. Otherwise let $N' = N$ and $S' = S$
 \end{enumerate}
@@ -144,7 +151,12 @@ Where $S'$ is a new symbol, and let $N' = N \cup \{S'\}$. Otherwise let $N' = N$
 
 \paragraph{}
 
-For example, given the grammar with the following productions in $P$:
+To make an example of this algorithm, we construct a grammar $\langle N, T, P, S \rangle$ where $S$ is a 1-handle with the label $A$ and $P$ is the following. Note the single $\epsilon$-production.
+\input{figures/theory-epsilon}
+
+After applying the algorithm the resulting grammar is $\langle N, T, P, S \rangle$ where $S$ is the 1-handle with the label $S'$ and $P$ is the following.
+\input{figures/theory-epsilon-fixed}
+
 \begin{align*}
 A &\to AaBbCc | \epsilon \\
 B &\to AB | \epsilon \\
@@ -157,6 +169,7 @@ B &\to AB | A | B \\
 C &\to c | d \\
 \end{align*}
 This is an equivalent grammar without any $\epsilon$ productions.
+
 
 % The Hickey-Cohen approach also has a problem with the grammar $A \Rightarrow AB$, the counting function is: 
 % \begin{align}

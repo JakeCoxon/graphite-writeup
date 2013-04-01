@@ -1,0 +1,111 @@
+
+\begin{center}
+  \begin{tikzpicture}
+
+    \matrix[column sep=0.5cm]
+    {
+    \node[vertex]     (lefta) [label=1] {};
+    \node[hyperedge]  (hyp1)  [below=0.5cm of lefta] {S'};
+    \node             (arrow) [right=of lefta] {$\Rightarrow$};
+    \path[-] (hyp1)   edge node[tentacle]{} (lefta);
+
+    &
+
+    \node[vertex]     (lefta) [label=1] {};
+    \node[hyperedge]  (hyp1)  [below=0.5cm of lefta] {$A$};
+    \path[-] (hyp1)   edge node[tentacle]{} (lefta);
+
+    &
+    \draw[seperator] (0,0) -- (0,-1);
+    &
+   
+    \node[vertex]     (a)     [label=1] {};
+
+    \\
+    };
+  \end{tikzpicture}
+  \\[0.5cm]
+  \begin{tikzpicture}
+
+    \matrix[column sep=0.5cm]
+    {
+    \node[vertex]     (lefta) [label=1] {};
+    \node[hyperedge]  (hyp1)  [below=0.5cm of lefta] {A};
+    \node             (arrow) [right=of lefta] {$\Rightarrow$};
+    \path[-] (hyp1)   edge node[tentacle]{} (lefta);
+
+    &
+
+    \node[vertex]     (a)     [label=1] {};
+    \node[vertex]     (b)     [below=of a] {};
+    \node[hyperedge]  (hyp2)  [below=0.5cm of b] {A};
+
+    \path[-] (a)      edge (b);
+    \path[-] (hyp2)   edge node[tentacle]{} (b);
+
+    &
+    \draw[seperator] (0,0) -- (0,-2);
+    &
+
+    \node[vertex]     (a)     [label=1] {};
+    \node[vertex]     (b)     [below=of a] {};
+
+    \path[-] (a)      edge (b);
+
+    &
+    \draw[seperator] (0,0) -- (0,-2);
+    &
+
+    \node[vertex]     (a)     [label=1] {};
+    \node[vertex]     (b)     [node distance=1cm and 0.5cm,below left=of a] {};
+    \node[hyperedge]  (hyp2)  [below=0.5cm of b] {A};
+    \node[vertex]     (c)     [node distance=1cm and 0.5cm,below right=of a] {};
+    \node[hyperedge]  (hyp3)  [below=0.5cm of c] {A};
+
+    \path[-] (a) edge (b)
+                 edge (c);
+    \path[-] (hyp2)   edge node[tentacle]{} (b);
+    \path[-] (hyp3)   edge node[tentacle]{} (c);
+
+    &
+    \draw[seperator] (0,0) -- (0,-2);
+    &
+
+    \node[vertex]     (a)     [label=1] {};
+    \node[vertex]     (b)     [node distance=1cm and 0.5cm,below left=of a] {};
+    \node[vertex]     (c)     [node distance=1cm and 0.5cm,below right=of a] {};
+    \node[hyperedge]  (hyp3)  [below=0.5cm of c] {A};
+
+    \path[-] (a) edge (b)
+                 edge (c);
+    \path[-] (hyp3)   edge node[tentacle]{} (c);
+
+    &
+    \draw[seperator] (0,0) -- (0,-2);
+    &
+    \node[vertex]     (a)     [label=1] {};
+    \node[vertex]     (b)     [node distance=1cm and 0.5cm,below left=of a] {};
+    \node[hyperedge]  (hyp2)  [below=0.5cm of b] {A};
+    \node[vertex]     (c)     [node distance=1cm and 0.5cm,below right=of a] {};
+
+    \path[-] (a) edge (b)
+                 edge (c);
+    \path[-] (hyp2)   edge node[tentacle]{} (b);
+
+    &
+    \draw[seperator] (0,0) -- (0,-2);
+    &
+    \node[vertex]     (a)     [label=1] {};
+    \node[vertex]     (b)     [node distance=1cm and 0.5cm,below left=of a] {};
+    \node[vertex]     (c)     [node distance=1cm and 0.5cm,below right=of a] {};
+
+    \path[-] (a) edge (b)
+                 edge (c);
+
+
+
+    \\
+    };
+
+  \end{tikzpicture}
+\end{center}
