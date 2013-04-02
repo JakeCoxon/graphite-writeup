@@ -1,25 +1,26 @@
-\begin{figure}[H]
-  \centering
+\begin{center}
   
   \begin{tikzpicture}
 
-    \node[] (lbl) [] {$a: A$};
+    \node[vertex] (lefta) {};
+    \node[hyperedge] (lefthyp1) [right=of lefta] {A};
+    \node[vertex] (leftb) [right=of lefthyp1] {};
+    \path[-] (lefthyp1) edge node[tentacle]{$1$} (lefta)
+                        edge node[tentacle]{$2$} (leftb);
 
 
-    \node[] (arrow1) [right=of lbl] {$\to$};
+    \node[] (arrow1) [right=of leftb] {$\to$};
 
 
-    \node[vertex] (a) [right=of arrow1] {} node[below=0mm of a,font=\tiny,inner sep=1pt]{1};
+    \node[vertex] (a) [right=of arrow1,label=below:1] {}; 
     \node[hyperedge] (hyp1) [right=of a] {A};
     \node[vertex] (b) [right=of hyp1] {};
-    \node[hyperedge] (hyp2) [right=of b] {A};
-    \node[vertex] (c) [right=of hyp2] {} node[below=0mm of c,font=\tiny,inner sep=1pt]{2};
+    \node[vertex] (c) [right=of b,label=below:2] {};
 
     \path[-] (hyp1) edge node[tentacle]{} (a)
                    edge node[tentacle]{} (b);
 
-    \path[-] (hyp2) edge node[tentacle]{} (b)
-                   edge node[tentacle]{} (c);
+    \path[-] (b) edge (c);
 
     %\node[vertex] (a) [right=of arrow1] {} node[below=0mm of a,font=\tiny,inner sep=1pt]{1};
     %\node[vertex] (b) [below right=1cm of a] {};
@@ -30,4 +31,4 @@
     %          (b) edge (c);
   \end{tikzpicture}
   
-\end{figure}
+\end{center}

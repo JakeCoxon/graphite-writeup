@@ -1,5 +1,4 @@
-\begin{figure}[H]
-  \centering
+\begin{center}
   
   \begin{tikzpicture}
 
@@ -15,34 +14,27 @@
     \node[vertex] (a) [right=of arrow1] {};
     \node[hyperedge] (hyp1) [right=of a] {A};
     \node[vertex] (b) [right=of hyp1] {};
-    \node[hyperedge] (hyp2) [right=of b] {A};
-    \node[vertex] (c) [right=of hyp2] {};
+    \node[vertex] (c) [right=of b] {};
 
     \path[-] (hyp1) edge node[tentacle]{} (a)
                    edge node[tentacle]{} (b);
 
-    \path[-] (hyp2) edge node[tentacle]{} (b)
-                   edge node[tentacle]{} (c);
+    \path[-] (b) edge (c);
 
    \node[] (arrow2) [below=0.5cm of arrow1] {$\underset{a}{\Rightarrow}$};
 
     \node[vertex] (a) [right=of arrow2] {};
     \node[hyperedge] (hyp1) [right=of a] {A};
     \node[vertex] (b) [right=of hyp1] {};
-    \node[hyperedge] (hyp2) [right=of b] {A};
-    \node[vertex] (c) [right=of hyp2] {};
-    \node[hyperedge] (hyp3) [right=of c] {A};
-    \node[vertex] (d) [right=of hyp3] {};
+    \node[vertex] (c) [right=of b] {};
+    \node[vertex] (d) [right=of c] {};
 
     \path[-] (hyp1) edge node[tentacle]{} (a)
                    edge node[tentacle]{} (b);
 
-    \path[-] (hyp2) edge node[tentacle]{} (b)
-                   edge node[tentacle]{} (c);
-
-    \path[-] (hyp3) edge node[tentacle]{} (c)
-                   edge node[tentacle]{} (d);
+    \path[-] (b) edge (c)
+             (c) edge (d);
 
   \end{tikzpicture}
   
-\end{figure}
+\end{center}

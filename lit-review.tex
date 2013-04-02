@@ -22,8 +22,7 @@
 
   Hyperedge can be drawn as a regular edge if its type is 2 and it has no label.
 
-  %\todo{C???}
-
+  A hypergraph can be used to model flow-diagrams in the following way:
   \input{figures/flowchart}
 
 \subsection{Random Graph Generation}
@@ -101,31 +100,30 @@
 \subsection{Hypergraph Languages}
   \subsubsection{Hyperedge Replacement}
 
-    It is possible to construct new hypergraphs by the replacement of a hyperedge by a new hypergraph to yield a new hypergraph. A hyperedge $e$ in a hypergraph $H$ may be replaced with another hypergraph $R$. An sequence of external nodes $ext$ in $R$ is needed where each node in $ext$ corresponds to an attachment node of $e$.
+    It is possible to construct new hypergraphs by the replacement of a hyperedge by a new hypergraph to yield a new hypergraph. A hyperedge $e$ in a hypergraph $H$ may be replaced with another hypergraph $R$. A sequence of external nodes $ext_R$ in $R$ is needed in order to position $R$ within $H$. Each node in $ext_R$ corresponds to an attachment node of $e$.
 
-    A \emph{hypergraph with external nodes} is defined as a pair $\langle H, ext \rangle$ where $H$ is a hypergraph and $ext \in V_H*$ is a \emph{sequence} of external nodes. The set of external nodes is denoted by $EXT$.
+    A multi-pointed hypergraph $H$ the combination of a hypergraph and a sequence of external nodes. It is defined as $\langle V_H, E_H, att_H, lbl_H, ext_H \rangle$ or as an extension to a hypergraph $\langle H, ext_H \rangle$, where $ext_H \in V_H*$ is a \emph{sequence} of external nodes. A useful notation is $EXT_H$ which denotes the set of external nodes.
 
     A replacement happens by first removing the hyperedge $e$, then adding the hypergraph $R$ excluding external nodes. Then for each hyperedge in $R$ that points to an external node, the tentacle must now point to the corresponding attachment nodes of $e$.
 
-    The definition of hyperedge replacement is as follows:
+    The definition of hyperedge replacement is as follows: Let $H$, $R \rangle$ be disjoint multi-pointed hypergraphs. $e$ is a hyperedge in $H$ where $type(e) = |ext_R|$. The replacement of hyperedge $e$ in a hypergraph $H$ with the hypergraph $R$ is denoted by $H[e/R] = X$.
 
-    Let $\langle H, ext_H \rangle$, $\langle R, ext_R \rangle$ be disjoint hypergraphs with external nodes. $e$ is a hyperedge in $H$ where $type(e) = |ext_R|$. The replacement of hyperedge $e$ in a hypergraph with external nodes $H$ with the a hypergraph with external nodes $R$ is denoted by $\langle H, ext_H \rangle[e/\langle R, ext_R\rangle] = \langle X, ext_X \rangle$, also written $H[e/R] = X$ where the sequence of external nodes are implied. 
-
-    \todo{Context-free Hypergraph Grammars: Node and Hyperedge Rewriting}
+    A formal definition of $X$ is found below. \todo{Context-free Hypergraph Grammars: Node and Hyperedge Rewriting}
 
     \begin{align*}
+    X = \langle V_X, E_X, att_X, lbl_X, ext_H \rangle \\[2mm]
     V_X &= V_H \cup (V_R \setminus EXT_R) \\[2mm]
     E_X &= (E_H \setminus \{e\}) \cup E_R \\[2mm]
-    lbl_X(e') &= \begin{dcases*}
-      lbl_H(e') \textrm{ if } e' \in E_H \setminus {e} \\
-      lbl_R(e') \textrm{ if } e' \in E_R
-    \end{dcases*} \\[2mm]
     att_X(e', i) &= \begin{dcases*}
       att_H(e', i) \textrm{ if } e' \in E_H \setminus {e} \\
       att_H(e, j) \textrm{ if } e' \in E_R \textrm{ and } att_R(e', i) = ext_R(j) \\
       att_R(e', i) \textrm{ if } e' \in E_R \textrm{ and } att_R(e', i) \in (V_R \setminus EXT_R)
     \end{dcases*} \\
     &\ \textrm{for } i \in 1..type(e') \\[2mm]
+    lbl_X(e') &= \begin{dcases*}
+      lbl_H(e') \textrm{ if } e' \in E_H \setminus {e} \\
+      lbl_R(e') \textrm{ if } e' \in E_R
+    \end{dcases*} \\[2mm]
     ext_X &= ext_H
     \end{align*}
 
@@ -153,9 +151,23 @@
 
   \subsubsection{Hyperedge Replacement Grammars}
 
-    Hypergraphs can be generated using productions based on hyperedge replacement. A production is $p = x \to \langle R, ext \rangle$ where $x$ is a non-terminal so let $H$, $H'$ be hypergraphs and let $e \in E_H$ such that $l_{H}(e) = x$. Then $H$ directly derives $H'$ by $p$ applied to $e$ if $H'$ is equivilent to $H[e / R]$. This can be written $H \underset{p}{\Rightarrow} H'$.
+    A special kind of hypergraph is introduced called a `handle'. It consists of a single edge $e$ that can be refered to as $edge(H)$ where $H$ is the handle, and its label is referred to as $label(H)$. It must also satisfy $V_H = att_H(e)$ meaning only the only vertices in $H$ are the ones attached to $e$. A handle with $n$ vertices is called a $n$-handle. Below is a 3-handle labelled `$A$'. Handles encapsulate a non-terminal along with it's attachment vertices.
 
-    If we are given a production:
+    \begin{center}
+      \begin{tikzpicture}
+        \node[vertex]     (a) [] {};
+        \node[hyperedge]  (hyp1)  [below=0.5cm of a] {$A$};
+        \node[vertex]     (b) [left=0.5cm of hyp1] {};
+        \node[vertex]     (c) [below=0.5cm of hyp1] {};
+        \path[-] (hyp1)   edge node[tentacle]{1} (a)
+                          edge node[tentacle]{2} (b)
+                          edge node[tentacle]{3} (c);
+      \end{tikzpicture}
+    \end{center}
+
+    Hypergraphs can be generated using productions based on hyperedge replacement. A production is $p = x \to R$ where $x$ is a non-terminal and $R$ is a multi-pointed hypergraph. This production is applied to a hyperedge $e$ in a hypergraph $H$ if $lbl_H(e) = x$ and $type(e) = |ext_R|$ resulting in the graph $H[e / R] = H'$. It is said that $H$ `directly derives' $H'$ which is also written $H \underset{p}{\Rightarrow} H'$.
+
+    Give the following production. Here, the leftside of the production is drawn as a handle, which represents the production $A \to \dots$. The handle on the left must have the the number of vertices equal to the number of external nodes on the right.
     \input{figures/hyperedge-production}
 
     Then it follows:
@@ -163,9 +175,9 @@
 
     A hyperedge replacement grammar (HR grammar) is a system for generating a hypergraph language through a set of derivations. It is similar to other language generation concepts in computer science.
 
-    A HR grammar can be defined as $G = \langle N, T, P, S \rangle$ where $N$ is a set of non-terminals, $T$ is a set of terminals disjoint with $N$, $S$ is the start graph. $P$ is a set of productions which are in the form of $x \to \langle R, ext \rangle$ where $x \in N$, $R$ is a hypergraph and $ext$ is the sequence of external nodes in $R$.
+    A HR grammar can be defined as $G = \langle N, T, P, S \rangle$ where $N$ is a set of non-terminals, $T$ is a set of terminals disjoint with $N$, $S$ is a handle which specifies the initial graph. $P$ is a set of productions which are in the form of $x \to R$ where $x \in N$, $R$ is a multi-pointed hypergraph.
 
-    The language of a control flow graph can be generated with the following
+    The language of a control flow graph can be generated with the grammar $\langle N, T, P, S \rangle$ where $S$ is a 2-handle labelled $C$ and $P$ contains the following productions.
     \input{figures/grammar-flowchart}
 
 \subsection{Ranjan's Approach}
@@ -206,30 +218,21 @@
 
   \subsubsection{Improvement on Ranjan's Approach}
 
-    It is likely that the reason Ranjan's approach happens in two stages is a workaround to GP which has a very simple instruction set. By changing the method keep a sequence of morphisms, we can improve it a bit.
-
-    \begin{itemize}
-    \item Let $d$ be a sequence of all isomorphic graph morphisms to $G$ for each rule in the grammar.
-    \item Pick a random integer $1 \leq r \leq \#d$ and apply rule $d_r$ to the graph $G$.
-    \item Update the sequence $d$
-    \item Repeat loop until some condition
-    \end{itemize}
-
-    This method is a more general version of Ranjan's approach and there are no restrictions of the grammar. However, the implementation of this method is very expensive to compute since matching morphisms is not trivial.
-
-    Another method is to use what we know about hypergraph languages. Below is a new method that works on hypergraphs. It keeps a sequence of available non-terminals and picks one at random. It then chooses a random rule that can be applied to this location and applies it the the graph. Using a sequence of non-terminals instead of graph morphisms gives a better computational speed since the lookup of non-terminals in a graph is a constant time operation.
+    It is likely that the reason Ranjan's approach happens in two stages is a workaround to GP which has a very simple instruction set. By changing the method keep a sequence of valid non-terminals, the method can be improved. Below is a new method that works on hypergraphs. It keeps a sequence of available non-terminals and picks one at random. It then chooses a random rule that can be applied to this location and applies it the the graph. Using a sequence of non-terminals instead of graph morphisms gives a better computational speed since the lookup of non-terminals in a graph is a constant time operation.
 
     \begin{itemize}
     \item Let $G$ be the start graph. Let $d$ be a sequence of all the non-terminal hyperedges in $G$
     \item Begin loop
     \begin{itemize}
     \item Pick a random integer $1 \leq l \leq \#d$.
-    \item Get the set of all valid rules on this edge. $r = \{\textrm{All rules $x \to \langle R, ext \rangle$ where $x = lbl_F(d_l)$\}}$
+    \item Get the set of all valid productions on this edge. $r = \{p | p = x \to R, p \in P, x = lbl_F(d_l)\}$
     \item Pick another random integer $1 \leq m \leq \#r$ and apply the rule $r_m$ to the graph $G$.
     \item Remove the non-terminal $d_l$ from $d$ and add all the non-terminals in the replaced graph $R$.
     \end{itemize}
     \item Repeat loop
     \end{itemize}
+
+    Unfortunately the algorithm still produces non-uniform randomness.
 
   \subsection{Hickey-Cohen Generation of Uniform Random Strings}
 

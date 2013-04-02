@@ -20,9 +20,9 @@
   \begin{tikzpicture}
 
     \node (lbl) {$R$:};
-    \node[vertex] (a) [right=of lbl] {} node[below=0mm of a,font=\tiny,inner sep=1pt]{1};
+    \node[vertex] (a) [right=of lbl,label=below:1] {};
     \node[vertex] (b) [below right=1cm of a] {};
-    \node[vertex] (c) [above right=1cm of b] {} node[below=0mm of c,font=\tiny,inner sep=1pt]{2};
+    \node[vertex] (c) [above right=1cm of b,label=below:2] {};
 
     \path[->] (a) edge (b)
                   edge (c)

@@ -54,8 +54,7 @@
 
 \subsubsection{Example}
 
-\input{figures/theory-nonterminal}
-
+We will use the example grammar $\langle N, T, P, S \rangle$ where $N = \{A\}$, $S$ is the 1-handle labelled `$A$' and $P$ contains the following productions.
 \input{figures/theory-binarytree}
 
 The program first computes values for $g_A(t)$ for $1 \leq t \leq n$ using the following equation.
@@ -115,7 +114,7 @@ The Hickey-Cohen approach is invalid on a cyclic grammar because the number of d
 
 In order to test if an $\epsilon$-free grammar is cyclic...
 
-\subsection{$\epsilon$-Free Grammar}
+\subsection{Grammars with $\epsilon$-productions}
 
 An $\epsilon$-free grammar is a grammar which has no derivations to $\epsilon$ or there is exactly one $\epsilon$-production $S \to \epsilon$ and $S$ does not appear on the rightside of any production. An $\epsilon$-production has different meaning depending on the type of grammar. In string grammars an $\epsilon$ is the empty string, in hypergraph grammars $\epsilon$ is a graph containing just external nodes.
 
@@ -129,7 +128,7 @@ It is useful to be able to transform an $\epsilon$ grammar into a $\epsilon$-fre
 \item Let $V_0 = \emptyset$ and set $i = 1$
 \item Let $V_i = \left\{a| a \in N \textrm{ and } produces_P(a, V_{i-1})\right\} \cup V_{i-1}$
 
-Where `$produces_P(A, Y)$' is a predicate which yields true if there is a a non-terminal $A$ in $P$ which directly derives only non-terminals in the set $Y$. It is defined as the following: $produces_P(A, Y) = true \iff A \to \langle R, ext \rangle$ is in $P$ where $R = \langle V, E, att, lbl\rangle$, $V = ext$ and $E \subseteq Y$ 
+Where `$produces_P(A, Y)$' is a predicate which yields true if there is a a non-terminal $A$ in $P$ which directly derives only non-terminals in the set $Y$. It is defined as the following: $produces_P(A, Y) = true \iff A \to \langle V, E, att, lbl\rangle$ is in $P$ where $V = ext$ and $E \subseteq Y$ 
 \item If $V_i \neq V_{i-1}$ set $i=i+1$ and repeat step 2. Otherwise let $N_\epsilon = V_i$
 \end{enumerate}
 Since $V_i \subseteq N$ then this procedure will terminate after a finite number of steps.
